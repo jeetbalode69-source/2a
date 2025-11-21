@@ -33,7 +33,7 @@ function App() {
   };
 
   try {
-    const response = await fetch('https://campus-cravings-backend-1.onrender.com', {
+    const response = await fetch('https://campus-cravings-backend-1.onrender.com/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderDetails),
