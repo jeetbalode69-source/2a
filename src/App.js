@@ -1,7 +1,6 @@
 // App.js (React) updated title
-import campusCravingsLogo from './campus-cravings.jpg';  // Adjust path if it's inside assets
 
-//import React, { useState } from 'react';
+import React, { useState } from 'react';
 
 const foodMenu = [
   { id: 1, name: "Veg Burger", category: "Snacks", price: 50 },
