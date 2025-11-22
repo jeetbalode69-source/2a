@@ -25,11 +25,24 @@ function App() {
     setCart([...cart, item]);
   };
 
-  const placeOrder = async () => {
+const placeOrder = async () => {
   const orderDetails = {
-    userEmail,   // your logged-in email
-    items: cart, // the items you added to cart
-    orderTime: new Date().toISOString() // current time
+    customerName: userName || null,          // if username not available → null
+    items: cart || [],                       // cart must always be an array
+    totalAmount: cart?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || null,
+
+    shippingAddress: {
+      street: form?.street || null,
+      city: form?.city || null,
+      state: form?.state || null,
+      zipCode: form?.zipCode || null
+    },
+
+    paymentMethod: selectedPaymentMethod || null,
+
+    // extra fields your frontend originally wanted to send
+    userEmail: userEmail || null,
+    orderTime: new Date().toISOString()
   };
 
   try {
@@ -43,7 +56,7 @@ function App() {
 
     if (response.ok) {
       alert(`Order placed! Your order ID: ${data.orderId}`);
-      setCart([]);  // cart is emptied
+      setCart([]);
     } else {
       alert('Order failed. Please try again.');
     }
@@ -51,6 +64,7 @@ function App() {
     alert('Network error. Please try again later.');
   }
 };
+
 
 
   if (!loggedIn) {
