@@ -1,11 +1,11 @@
-// App.js (React) updated title
+// App.js (React)
 
 import React, { useState } from 'react';
 
 const foodMenu = [
   { id: 1, name: "Veg Burger", category: "Snacks", price: 50 },
   { id: 2, name: "Paneer Sandwich", category: "Snacks", price: 70 },
-  { id: 3, name: "Milkshake", category: "Drinks", price: 40 },
+  { id: 3, name: "Milkshake", category: "Drinks", price: 40 }
 ];
 
 function App() {
@@ -22,65 +22,55 @@ function App() {
   };
 
   const addToCart = (item) => {
-    setCart([...cart, item]);
-  };
-const placeOrder = async () => {
-const orderDetails = {
-  customerName: "Neelansh",          // dummy
-  items: cart || [],
-  totalAmount:
-    cart && cart.length > 0
-      ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-      : null,
-
-  shippingAddress: {
-    street: null,
-    city: null,
-    state: null,
-    zipCode: null
-  },
-
-  paymentMethod: null,         // dummy
-
-  userEmail: userEmail || null,
-  orderTime: new Date().toISOString()
-};
-
-      zipCode: null
-    },
-
-    // DUMMY paymentMethod
-    paymentMethod: null,
-
-    // original frontend fields
-    userEmail: userEmail || null,
-    orderTime: new Date().toISOString()
+    // quantity default = 1 to match backend expectation
+    setCart([...cart, { ...item, quantity: 1 }]);
   };
 
-  try {
-    const response = await fetch(
-      "https://campus-cravings-backend-1.onrender.com/api/order",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderDetails)
+  const placeOrder = async () => {
+    const orderDetails = {
+      customerName: "Neelansh", // Dummy value
+      items: cart || [],
+      totalAmount:
+        cart && cart.length > 0
+          ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+          : null,
+
+      shippingAddress: {
+        street: null,
+        city: null,
+        state: null,
+        zipCode: null
+      },
+
+      paymentMethod: null, // dummy value
+
+      // Additional frontend fields
+      userEmail: userEmail || null,
+      orderTime: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(
+        "https://campus-cravings-backend-1.onrender.com/api/order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderDetails)
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Order placed! Your order ID: ${data.orderId}`);
+        setCart([]);
+      } else {
+        alert("Order failed. Please try again.");
       }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      alert(`Order placed! Your order ID: ${data.orderId}`);
-      setCart([]);
-    } else {
-      alert("Order failed. Please try again.");
+    } catch (error) {
+      alert("Network error. Please try again later.");
     }
-  } catch (error) {
-    alert("Network error. Please try again later.");
-  }
-};
-
-
+  };
 
   if (!loggedIn) {
     return (
@@ -101,6 +91,7 @@ const orderDetails = {
     <div>
       <h1>Campus Cravings</h1>
       <h3>Menu</h3>
+
       {foodMenu.map((item) => (
         <div key={item.id}>
           {item.name} - ₹{item.price}{" "}
@@ -110,7 +101,9 @@ const orderDetails = {
 
       <h3>Cart ({cart.length} items)</h3>
       {cart.map((item, i) => (
-        <div key={i}>{item.name}</div>
+        <div key={i}>
+          {item.name} — Qty: {item.quantity}
+        </div>
       ))}
 
       <button onClick={placeOrder} disabled={cart.length === 0}>
