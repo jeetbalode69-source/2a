@@ -25,19 +25,27 @@ function App() {
     setCart([...cart, item]);
   };
 const placeOrder = async () => {
-  const orderDetails = {
-    customerName: userName || null,
-    items: cart || [],
-    totalAmount:
-      cart && cart.length > 0
-        ? cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-        : null,
+const orderDetails = {
+  customerName: "Neelansh",          // dummy
+  items: cart || [],
+  totalAmount:
+    cart && cart.length > 0
+      ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+      : null,
 
-    // DUMMY shippingAddress → always defined
-    shippingAddress: {
-      street: null,
-      city: null,
-      state: null,
+  shippingAddress: {
+    street: null,
+    city: null,
+    state: null,
+    zipCode: null
+  },
+
+  paymentMethod: null,         // dummy
+
+  userEmail: userEmail || null,
+  orderTime: new Date().toISOString()
+};
+
       zipCode: null
     },
 
