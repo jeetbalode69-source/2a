@@ -24,33 +24,40 @@ function App() {
   const addToCart = (item) => {
     setCart([...cart, item]);
   };
-
 const placeOrder = async () => {
   const orderDetails = {
-    customerName: userName || null,          // if username not available → null
-    items: cart || [],                       // cart must always be an array
-    totalAmount: cart?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || null,
+    customerName: userName || null,
+    items: cart || [],
+    totalAmount:
+      cart && cart.length > 0
+        ? cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        : null,
 
+    // DUMMY shippingAddress → always defined
     shippingAddress: {
-      street: form?.street || null,
-      city: form?.city || null,
-      state: form?.state || null,
-      zipCode: form?.zipCode || null
+      street: null,
+      city: null,
+      state: null,
+      zipCode: null
     },
 
-    paymentMethod: selectedPaymentMethod || null,
+    // DUMMY paymentMethod
+    paymentMethod: null,
 
-    // extra fields your frontend originally wanted to send
+    // original frontend fields
     userEmail: userEmail || null,
     orderTime: new Date().toISOString()
   };
 
   try {
-    const response = await fetch('https://campus-cravings-backend-1.onrender.com/api/order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderDetails),
-    });
+    const response = await fetch(
+      "https://campus-cravings-backend-1.onrender.com/api/order",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderDetails)
+      }
+    );
 
     const data = await response.json();
 
@@ -58,10 +65,10 @@ const placeOrder = async () => {
       alert(`Order placed! Your order ID: ${data.orderId}`);
       setCart([]);
     } else {
-      alert('Order failed. Please try again.');
+      alert("Order failed. Please try again.");
     }
   } catch (error) {
-    alert('Network error. Please try again later.');
+    alert("Network error. Please try again later.");
   }
 };
 
